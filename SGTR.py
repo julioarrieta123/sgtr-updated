@@ -19,8 +19,8 @@ class VentanaLogin():
     def __init__(self):
         ctk.set_appearance_mode("dark")
         self.root = ctk.CTk()
-        w = 800
-        h = 400
+        w = 2000
+        h = 1080
         ws = self.root.winfo_screenwidth()
         hs = self.root.winfo_screenheight()
         w,h = ws,hs
@@ -29,8 +29,20 @@ class VentanaLogin():
         self.root.geometry('%dx%d+%d+%d' % (w, h, x, y))
 		#-----------------------------------------------------------------
         self.root.title("Iniciar Sesion")
-        self.root.attributes('-fullscreen',True) 
+        #self.root.attributes('-fullscreen', True)
+        
 		#-----------------------------------------------------------------
+
+#----------------------------Imagen Login---------------------------------------
+
+        
+        img = Image.open(os.path.join(carpeta_imagen, "login_diseño.png"))
+        img = img.resize((int(w/1),h))
+        img_login = ImageTk.PhotoImage(img)
+        img_login_lbl = ctk.CTkLabel(self.root, image=img_login, text="")
+        img_login_lbl.pack()
+        img_login_lbl.place(x=1, y=1)
+
         def login_admin():
             if(entry_usuario.get() == ""):
                 entry_usuario.focus()
@@ -58,66 +70,42 @@ class VentanaLogin():
             self.root.destroy()
             ventana_registrar = VentanaAdmin()
         
-        marco = ctk.CTkFrame (self.root, width=425, height=490)
-        marco.pack()
-        marco.place(relx=0.65, rely=0.18)
+        
 		
-        entry_usuario = ctk.CTkEntry(self.root, placeholder_text="Ingrese Ususario",width=w/4, height=h/19)
+        entry_usuario = ctk.CTkEntry(self.root, placeholder_text="Ingrese Ususario",fg_color="#233B49",border_color="#048BA0", text_color="white",bg_color="white",width=w/4, height=h/19)
         entry_usuario.pack(pady=10)
-        entry_usuario.place(relx=0.68, rely=0.50)
+        entry_usuario.place(relx=0.70, rely=0.50)
 		
-        entry_constrasena = ctk.CTkEntry(self.root, placeholder_text="Ingrese Contraseña", show="*",width=w/4, height=h/19) 
+        entry_constrasena = ctk.CTkEntry(self.root, placeholder_text="Ingrese Contraseña",fg_color="#233B49",border_color="#048BA0", text_color="white", bg_color="white", show="*",width=w/4, height=h/19) 
         entry_constrasena.pack(pady=10)
-        entry_constrasena.place(relx=0.68, rely=0.57)
+        entry_constrasena.place(relx=0.70, rely=0.57)
 	
-        opciones=["Español", "Ingles"]
-        cmbx_idioma = ctk.CTkComboBox(self.root, values=opciones, state="readonly", width=100)
-        cmbx_idioma.set("idioma:")
-        cmbx_idioma.place(x=685, y=10)
+        #opciones=["Español", "Ingles"]
+        #cmbx_idioma = ctk.CTkComboBox(self.root, values=opciones, state="readonly", width=100)
+        #cmbx_idioma.set("idioma:")
+        #cmbx_idioma.place(x=685, y=10)
 
         self.img_entrar = ctk.CTkImage(Image.open(os.path.join(carpeta_imagen, "logo_entrar.png")), size=(30, 30))
 
         boton_entrar= ctk.CTkButton(self.root, text="Entrar",width=w/4, height=h/19,
-                                    cursor="hand2" , command=login_admin, image=self.img_entrar, compound="left")
+                                    cursor="hand2", bg_color="white" , command=login_admin, image=self.img_entrar, compound="left")
         boton_entrar.pack(pady=20)
-        boton_entrar.place(relx=0.68, rely=0.65)
+        boton_entrar.place(relx=0.70, rely=0.65)
 		
         self.gregar_admin = ctk.CTkImage(Image.open(os.path.join(carpeta_imagen, "gregar_admin.png")), size=(30, 30))
 
         boton_registrar= ctk.CTkButton(self.root, text="Registrar Administrador", fg_color="#468189" ,width=w/4, height=h/19, 
-                                       hover_color="#395462", cursor="hand2", image=self.gregar_admin, compound="left",command=LoginARegristrar)
+                                       hover_color="#395462", bg_color="white", cursor="hand2", image=self.gregar_admin, compound="left",command=LoginARegristrar)
         boton_registrar.pack(pady=0)
-        boton_registrar.place(relx=0.68, rely=0.72)
-
-        boton_salir= ctk.CTkButton(self.root, text="X", fg_color="Red",hover_color="#5e1914", cursor="hand2", 
-                                   command=self.root.quit, width=30 , height=30, corner_radius=0)
-        boton_salir.pack(pady=10, padx=10)
-        boton_salir.place(x=w-30, y=0)
-
-        boton_minimizar= ctk.CTkButton(self.root, text="-", font=("", 20), fg_color="#00a8f3",hover_color="#006593", cursor="hand2", 
-                                   command=self.root.iconify, width=30 , height=30, corner_radius=0)
-        boton_minimizar.pack(pady=10, padx=10)
-        boton_minimizar.place(x=w-64, y=0)
-        
-		#----------------------------Imagen Login---------------------------------------
+        boton_registrar.place(relx=0.70, rely=0.72)
 
         
-        img = Image.open(os.path.join(carpeta_imagen, "login_image.jpg"))
-        img = img.resize((int(w/1.7),h))
-        img_login = ImageTk.PhotoImage(img)
-        img_login_lbl = ctk.CTkLabel(self.root, image=img_login, text="")
-        img_login_lbl.pack()
-        img_login_lbl.place(x=1, y=1)
+        
+		
 		#-----------------------------imagen logo-------------------------------------------
 
 		
-		#-----------------------------logo lenguaje---------------------
-        img = Image.open(os.path.join(carpeta_imagen, "logo_sgtr.png"))
-        img = img.resize((int(w/6),int(h/5)))
-        img_logo = ImageTk.PhotoImage(img)
-        img_logo_lbl = ctk.CTkLabel(self.root, image=img_logo, text="",  bg_color="#2b2b2b")
-        img_logo_lbl.pack()
-        img_logo_lbl.place(relx=0.72, rely=0.25)
+		
 
         
 
@@ -316,6 +304,7 @@ class Ventana_agregar_articulos():
                 messagebox.showinfo("Faltan Datos.", "Seleccione el estado.")
                 return
             
+            
             basedatos = mydb = pymysql.connect(host= "localhost", user="root", passwd="", db="sistemproa")
             fcursor = basedatos.cursor()
             
@@ -326,6 +315,7 @@ class Ventana_agregar_articulos():
 
             self.root.destroy()
             basedatos.close()
+        
 
         #----------------------------------------- FONDO -------------------------------------------------------------------------
         #carpeta_imagen = os.path.join(carpeta_principal, "img")
@@ -492,37 +482,31 @@ class Ventana_registrar_venta():
 		#-----------------------------------------------------------------
         self.root.title("Registrar Venta")
 		#----------------------PDF----------------------------------------------------------------------------------------------------------
-    
-    
 
-        #-------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-    def Ventas_button ():
-        if entry_nombre.get()=="":
-            entry_nombre.focus()
-            messagebox.showinfo("Faltan Datos.", "Ingrese el nombre.")
-            return
-        elif entry_apellido.get()=="":
-            entry_apellido.focus()
-            messagebox.showinfo("Faltan Datos.", "Ingrese el apellido.")
-            return
-        elif entry_prendas_compradas.get()=="":
-            entry_prendas_compradas.focus()
-            messagebox.showinfo("Faltan Datos.", "Ingrese la cantidad de prendas compradas.")
-            return
-        elif cmbx_metodo_pago.get()=="Método de pago:":
-            cmbx_metodo_pago.focus()
-            messagebox.showinfo("Faltan Datos.", "Seleccione el método de pago.")
-            return
-        elif cmbx_cuotas.get()=="Cuotas:":
-            cmbx_cuotas.focus()
-            messagebox.showinfo("Faltan Datos.", "Seleccione la cantidad de cuotas.")
-            return
-        elif entry_total.get()=="":
-            entry_total.focus()
-            messagebox.showinfo("Faltan Datos.", "Ingrese el monto total a pagar.")
+        def Ventas_button ():
+            if entry_nombre.get()=="":
+                        entry_nombre.focus()
+                        messagebox.showinfo("Faltan Datos.", "Ingrese el nombre.")
+                        return
+            elif entry_apellido.get()=="":
+                        entry_apellido.focus()
+                        messagebox.showinfo("Faltan Datos.", "Ingrese el apellido.")
+                        return
+            elif entry_prendas_compradas.get()=="":
+                    entry_prendas_compradas.focus()
+                    messagebox.showinfo("Faltan Datos.", "Ingrese la cantidad de prendas compradas.")
+                    return
+            elif cmbx_metodo_pago.get()=="Método de pago:":
+                    cmbx_metodo_pago.focus()
+                    messagebox.showinfo("Faltan Datos.", "Seleccione el método de pago.")
+                    return
+            elif cmbx_cuotas.get()=="Cuotas:":
+                cmbx_cuotas.focus()
+                messagebox.showinfo("Faltan Datos.", "Seleccione la cantidad de cuotas.")
+                return
+            elif entry_total.get()=="":
+                entry_total.focus()
+                messagebox.showinfo("Faltan Datos.", "Ingrese el monto total a pagar.")
 
             basedatos = pymysql.connect(host= "localhost", user="root", passwd="", db="sistemproa")
             fcursor = basedatos.cursor()
@@ -536,10 +520,6 @@ class Ventana_registrar_venta():
 
             self.root.destroy()
             basedatos.close()
-
-            
-
-
 
         entry_nombre=ctk.CTkEntry(self.root, placeholder_text="Nombre:")
         entry_nombre.pack()
@@ -584,6 +564,111 @@ class Ventana_registrar_venta():
 
         self.root.mainloop()
 
+
+class Boleta(FPDF):
+    def header(self):
+        self.set_font('Arial', 'B', 12)
+        self.cell(80)
+        self.cell(30, 10, 'Boleta', 1, 0, 'C')
+        self.ln(20)
+
+    def footer(self):
+        self.set_y(-15)
+        self.set_font('Arial', 'I', 8)
+        self.cell(0, 10, 'Página %s' % self.page_no(), 0, 0, 'C')
+
+    def create_boleta(self, data):
+        self.set_font('Arial', 'B', 12)
+        self.cell(40, 10, 'Nombre:', 0)
+        self.set_x(70)
+        self.cell(0, 10, data['nombre'], 0, 1)
+        self.ln(10)
+
+        self.set_font('Arial', 'B', 12)
+        self.cell(40, 10, 'Apellido:', 0)
+        self.set_x(70)
+        self.cell(0, 10, data['apellido'], 0, 1)
+        self.ln(10)
+
+        self.set_font('Arial', 'B', 12)
+        self.cell(40, 10, 'Prendas compradas:', 0)
+        self.set_x(70)
+        self.cell(0, 10, str(data['prendas_compradas']), 0, 1)
+        self.ln(10)
+
+        self.set_font('Arial', 'B', 12)
+        self.cell(40, 10, 'Métedo de Pago:', 0)
+        self.set_x(70)
+        self.cell(0, 10, data['metedo_pago'], 0, 1)
+        self.ln(10)
+
+        self.set_font('Arial', 'B', 12)
+        self.cell(40, 10, 'Cuotas:', 0)
+        self.set_x(70)
+        self.cell(0, 10, str(data['cuotas']), 0, 1)
+        self.ln(10)
+
+        self.set_font('Arial', 'B', 12)
+        self.cell(40, 10, 'Total:', 0)
+        self.set_x(70)
+        self.cell(0, 10, str(data['total']), 0, 1)
+        self.ln(10)
+
+class Ventana_crear_boleta():
+    def __init__(self):
+        self.root = tk.Tk()  # Corregido: Utilizar tk.Tk() en lugar de ctk.CTk()
+        self.root.title("Crear Ventana")
+
+        w = 390
+        h = 150
+        ws = self.root.winfo_screenwidth()
+        hs = self.root.winfo_screenheight()
+        x = (ws / 2) - (w / 2)
+        y = (hs / 2) - (h / 2)
+        self.root.geometry('%dx%d+%d+%d' % (w, h, x, y))
+        self.root.resizable(False, False)
+
+        self.entry_numero_compra = ctk.CTkEntry(self.root, placeholder_text="Núm. de Compra:")
+        self.entry_numero_compra.pack()
+        self.entry_numero_compra.place(relx=0.1, rely=0.1)
+
+        self.entry_guardar_nombre = ctk.CTkEntry(self.root, placeholder_text="Guardar cómo:")
+        self.entry_guardar_nombre.pack()
+        self.entry_guardar_nombre.place(relx=0.55, rely=0.1)
+
+        btn_guardar = ctk.CTkButton(self.root, text="Guardar",hover_color="#0f5b61", fg_color="#24838a", bg_color="white", width=w/1.24, height=h/2.55, cursor="hand2", command=self.Abrir_Crear_Boleta)
+        btn_guardar.place(relx=0.1, rely=0.3)
+
+        self.root.mainloop()
+
+    def Abrir_Crear_Boleta(self):
+        messagebox.showinfo("Exito", "La boleta se guardó con éxito.")
+
+        id_boleta = int(self.entry_numero_compra.get())
+        nombre_archivo = self.entry_guardar_nombre.get() + ".pdf"
+
+        boleta = Boleta()
+        boleta.add_page()
+
+        basedatos = pymysql.connect(host="localhost", user="root", passwd="", db="sistemproa")
+        fcursor = basedatos.cursor()
+
+        query = "SELECT nombre, apellido, prendas_compradas, metedo_pago, cuotas, total FROM ventas WHERE id_ventas = %s"
+        fcursor.execute(query, (id_boleta,))
+        data = fcursor.fetchone()
+
+        if data is not None and len(data) > 0:
+            boleta.create_boleta({'nombre': data[0], 'apellido': data[1], 'prendas_compradas': data[2], 'metedo_pago': data[3], 'cuotas': data[4], 'total': data[5]})
+            boleta.output(nombre_archivo)
+            print("Se guardó correctamente la boleta")
+        else:
+            print("Error: No se encontraron datos para crear la boleta.")
+        fcursor.close()
+        basedatos.close()
+        self.root.destroy()
+
+
+    
 
 class Ventana_registrar_proveedor():
     def __init__(self):
@@ -635,6 +720,8 @@ class Ventana_registrar_proveedor():
 
         self.root.mainloop()
 
+
+
 class VentanaMenu():
     def __init__(self):
         super().__init__()
@@ -642,17 +729,16 @@ class VentanaMenu():
         self.root = ctk.CTk()
         ctk.set_appearance_mode("dark")
 		#---------------------Centrar-Ventana-----------------------------
-        w = 800
-        h = 349
+        w = 2000
+        h = 1080
         ws = self.root.winfo_screenwidth()
         hs = self.root.winfo_screenheight()
+        w,h = ws,hs
         x = (ws/2) - (w/2)
         y = (hs/2) - (h/2)
-        w,h = ws,hs
         self.root.geometry('%dx%d+%d+%d' % (w, h, x, y))
 		#-----------------------------------------------------------------
         self.root.title("Menú")
-        self.root.attributes('-fullscreen', True)
 	    #self.root.iconbitmap("D:\\programacion IV\\proyecto final\\favicon.ico")
         self.navegacion_frame = ctk.CTkFrame(self.root, corner_radius=0)
         self.navegacion_frame.place(x=0, y=0)
@@ -665,10 +751,12 @@ class VentanaMenu():
             ventana_agregar_articulos = Ventana_agregar_articulos()
         def Abrir_Agregar_Clientes():
             ventana_agregar_cliente = Ventana_agregar_cliente()
-        def Abrir_Registrar_Venta():
+        def Abrir_registrar_ventas():
             ventana_registrar_venta = Ventana_registrar_venta()
         def Abrir_Registrar_Proveedor():
             ventana_registrar_proveedor = Ventana_registrar_proveedor()
+        def Abrir_Crear_Boleta():
+            ventana_crear_boleta = Ventana_crear_boleta()
 
 
         
@@ -775,14 +863,110 @@ class VentanaMenu():
         self.tercer_frame.grid_columnconfigure(0, weight=1)
 
         self.agregar_articulo_button_1 = ctk.CTkButton(self.tercer_frame, text="Agregar Artículo", command= Abrir_Agregar_Articulos)
-        self.agregar_articulo_button_1.grid(row=1, column=0, padx=20, pady=10)
+        self.agregar_articulo_button_1.grid(row=0, column=0, padx=20, pady=10)
+
+        self.tabview = ctk.CTkTabview(self.tercer_frame, width=300)
+        self.tabview.grid(row=1, column=0, padx=(30, 0), pady=(30, 0), sticky="nsew")
+        self.tabview.add("Hombre")
+        self.tabview.add("Mujer")
+        self.tabview.add("Niños")
+        self.tabview.tab("Hombre").grid_columnconfigure(0, weight=3)  
+        self.tabview.tab("Mujer").grid_columnconfigure(0, weight=3)
+        self.tabview.tab("Niños").grid_columnconfigure(0, weight=3)
+
+
+        
+        self.lblhombre = ctk.CTkLabel(self.tabview.tab("Hombre"), text="Ropa de Hombre")
+        self.lblhombre.grid(row=0, column=0, padx=20, pady=20)
+
+        self.tablahombre = ttk.Treeview(self.tabview.tab("Hombre"))
+        self.tablahombre["columns"] = ("Marca", "Talle", "Estado", "Precio", "Tipo de Usuario", "Tipo de Prenda") 
+        self.tablahombre.heading("#1", text="Marca")
+        self.tablahombre.heading("#2", text="Talle")
+        self.tablahombre.heading("#3", text="Estado")
+        self.tablahombre.heading("#4", text="Precio")
+        self.tablahombre.heading("#5", text="Tipo de Usuario")
+        self.tablahombre.heading("#6", text="Tipo de Prenda")
+        self.tablahombre.grid(row=0, column=0)
+
+        basedatos = pmydb = pymysql.connect(host= "localhost", user="root", passwd="", db="sistemproa")
+        fcursor = basedatos.cursor()
+
+        fcursor.execute("SELECT marca, talle, estado, precio, tipo_usuario, tipo_prenda FROM articulos")
+        rows = fcursor.fetchall()
+
+        for row in rows:
+            self.tablahombre.insert("","end",values=row)
+
+        self.lblmujer = ctk.CTkLabel(self.tabview.tab("Mujer"), text="Ropa de Mujer")
+        self.lblmujer.grid(row=0, column=0, padx=20, pady=20)
+
+        self.tablamujer = ttk.Treeview(self.tabview.tab("Mujer"))
+        self.tablamujer["columns"] = ("Marca", "Talle", "Estado", "Precio", "Tipo de Usuario", "Tipo de Prenda") 
+        self.tablamujer.heading("#1", text="Marca")
+        self.tablamujer.heading("#2", text="Talle")
+        self.tablamujer.heading("#3", text="Estado")
+        self.tablamujer.heading("#4", text="Precio")
+        self.tablamujer.heading("#5", text="Tipo de Usuario")
+        self.tablamujer.heading("#6", text="Tipo de Prenda")
+        self.tablamujer.grid(row=0, column=0)
+
+        basedatos = pmydb = pymysql.connect(host= "localhost", user="root", passwd="", db="sistemproa")
+        fcursor = basedatos.cursor()
+
+        fcursor.execute("SELECT marca, talle, estado, precio, tipo_usuario, tipo_prenda FROM articulos")
+        rows = fcursor.fetchall()
+
+        for row in rows:
+            self.tablamujer.insert("","end",values=row)
+
+
+
 
         #FRAME VENTAS
         self.cuarto_frame = ctk.CTkFrame(self.root, corner_radius=0, fg_color="transparent")
         self.cuarto_frame.grid_columnconfigure(0, weight=1)
 
-        self.agregar_venta_button_1 = ctk.CTkButton(self.cuarto_frame, text="Registrar Venta", command= Abrir_Registrar_Venta)
-        self.agregar_venta_button_1.grid(row=1, column=0, padx=20, pady=10)
+        self.agregar_venta_button_1 = ctk.CTkButton(self.cuarto_frame, text="Registrar Venta", command= Abrir_registrar_ventas)
+        self.agregar_venta_button_1.grid(row=0, column=0, padx=10, pady=10)
+
+        self.guardar_boleta = ctk.CTkButton(self.cuarto_frame, text="Crear boleta", command= Abrir_Crear_Boleta)
+        self.guardar_boleta.grid(row=0, column=1, padx=10, pady=10)
+
+        self.tablaventas = ttk.Treeview(self.cuarto_frame)
+        self.tablaventas["columns"] = ("ID", "Nombre", "Apellido", "Prendas Compradas", "Método de pago", "Cuotas", "Total") 
+        self.tablaventas.heading("#0", text="")
+        self.tablaventas.column("#0", width=0, stretch=tk.NO)
+
+        self.tablaventas.heading("#1", text="ID")
+        self.tablaventas.column("#1", width=4)
+
+        self.tablaventas.heading("#2", text="Nombre")
+        self.tablaventas.column("#2", width=120)
+
+        self.tablaventas.heading("#3", text="Apellido")
+
+        self.tablaventas.heading("#4", text="Prendas Compradas")
+
+        self.tablaventas.heading("#5", text="Método de pago")
+
+        self.tablaventas.heading("#6", text="Cuotas")
+
+        self.tablaventas.heading("#7", text="Total")
+
+        self.tablaventas.grid(row=1, column=0, columnspan=2, padx=10, pady=10)
+
+        basedatos = pymysql.connect(host= "localhost", user="root", passwd="", db="sistemproa")
+        fcursor = basedatos.cursor()
+
+        fcursor.execute("SELECT id_ventas, nombre, apellido, prendas_compradas, metedo_pago, cuotas, total FROM ventas")
+        rows = fcursor.fetchall()
+
+        for row in rows:
+            self.tablaventas.insert("","end",values=row)
+
+
+        
 
         #FRAME provedor
         self.quinto_frame = ctk.CTkFrame(self.root, corner_radius=0, fg_color="transparent")
@@ -798,6 +982,10 @@ class VentanaMenu():
         self.select_frame_by_name("home")
 
         self.root.mainloop()
+    
+    def open_input_dialog_event(self):
+        dialog = ctk.CTkInputDialog(text="Type in a number:", title="CTkInputDialog")
+        print("CTkInputDialog:", dialog.get_input())
 
     def select_frame_by_name(self, name):
         # set button color for selected button
@@ -846,4 +1034,4 @@ class VentanaMenu():
     def proveedores_button_event (self):
         self.select_frame_by_name("proveedor")
 
-ventana_iniciar = Boleta()
+ventana_iniciar = VentanaMenu()
