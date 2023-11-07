@@ -62,7 +62,7 @@ class VentanaLogin():
                 self.root.destroy()
                 ventana_menu = VentanaMenu()
             else:
-                messagebox.showinfo("Error", "Usuario y/o Contraseña Incorrecta")
+                messagebox.showerror("Error", "Usuario y/o Contraseña Incorrecta")
 
             basedatos.close()
         
@@ -344,10 +344,11 @@ class Ventana_agregar_articulos():
         entry_precio= ctk.CTkEntry(self.root, placeholder_text="Precio:")
         entry_precio.pack()
         entry_precio.place(relx=0.1,rely=0.3)
-		
-        entry_tipo_usuario= ctk.CTkEntry(self.root, placeholder_text="Tipo de usuario:" )
-        entry_tipo_usuario.pack()
-        entry_tipo_usuario.place(relx=0.55,rely=0.1)
+
+        opciones_usu= ["Hombre", "Mujer", "Niños"]
+        cmbx_tipo_usuario= ctk.CTkComboBox(self.root, values=opciones_usu, state="readonly")
+        cmbx_tipo_usuario.set("Tipo de usuario")
+        cmbx_tipo_usuario.place(relx=0.55,rely=0.1)
 		
         entry_tipo_prenda= ctk.CTkEntry(self.root, placeholder_text="Tipo de prenda:" )
         entry_tipo_prenda.pack()
@@ -578,55 +579,89 @@ class Ventana_registrar_venta():
 
 class Boleta(FPDF):
     def header(self):
-    self.set_font('Arial', 'B', 16)
-    self.cell(60)
-    self.cell(80, 12, 'Comprobante de Compra', 0, 1, 'C')
-    self.ln(15)
+        self.set_font('Times', 'B', 16)
+        self.cell(60)
+        self.cell(80, 12, 'Comprobante de compra', 1, 0, 'C')
+        self.ln(25)
+
+        self.cell(5)
+        self.cell(180, 120, '', 1,0,'C')
+        self.ln(25)
+
+        
 
     def footer(self):
         self.set_y(-15)
         self.set_font('Arial', 'I', 8)
-        self.cell(0, 10, 'Esta boleta fue creada a través de SGTR® - Página %s' % self.page_no(), 0, 0, 'C')
+        self.cell(0, 10, 'Esta boleta fue creada a traves de SGTR® %s' % self.page_no(), 0, 0, 'C')
 
     def create_boleta(self, data):
         self.set_font('Arial', 'B', 12)
+        self.cell(20)
         self.cell(40, 10, 'Nombre y Apellido:', 0)
+        self.set_x(80)
         self.cell(0, 10, data['nombreyapellido'], 0, 1)
         self.ln(10)
 
-        self.cell(40, 10, 'Prendas Compradas:', 0)
+        self.set_font('Arial', 'B', 12)
+        self.cell(20)
+        self.cell(40, 10, 'Prendas compradas:', 0)
+        self.set_x(80)
         self.cell(0, 10, str(data['prendas_compradas']), 0, 1)
         self.ln(10)
 
+        self.set_font('Arial', 'B', 12)
+        self.cell(20)
         self.cell(40, 10, 'Método de Pago:', 0)
-        self.cell(0, 10, data['metodo_pago'], 0, 1)
+        self.set_x(80)
+        self.cell(0, 10, data['metedo_pago'], 0, 1)
         self.ln(10)
 
-        self.cell(40, 10, 'Entregó:', 0)
-        self.cell(0, 10, str(data['entrego']), 0, 1)
+        self.set_font('Arial', 'B', 12)
+        self.cell(20)
+        self.cell(40, 10, 'Entregó', 0)
+        self.set_x(80)
+        self.cell(0, 10, str(data['entrega']), 0, 1)
         self.ln(10)
 
+        self.set_font('Arial', 'B', 12)
+        self.cell(20)
         self.cell(40, 10, 'Cuotas:', 0)
+        self.set_x(80)
         self.cell(0, 10, str(data['cuotas']), 0, 1)
         self.ln(10)
 
+        self.set_y(155)
+
+        self.set_font('Arial', 'B', 12)
+        self.cell(140)
         self.cell(40, 10, 'Total:', 0)
+        self.set_x(162)
         self.cell(0, 10, str(data['total']), 0, 1)
-        self.ln(10)
+        self.ln(20)
 
-        self.cell(40, 10, 'Total Final:', 0)
+        self.set_y(160)
+
+        self.set_font('Arial', 'B', 12)
+        self.cell(140)
+        self.cell(40, 10, 'Total final:', 0)
+        self.set_x(168)
         self.cell(0, 10, str(data['total_final']), 0, 1)
-        self.ln(10)
+        self.ln(20)
 
-        self.cell(40, 15, '', 0)
-        self.cell(0, 15, '', 0, 1)
-        self.ln(10)
+        
 
+        self.set_y(155)
+
+        self.cell (135)
+        self.cell(50, 15, '', 1, 0, 'C')
+        self.ln(20)
 
 
 class Ventana_crear_boleta():
     def __init__(self):
-        self.root = tk.Tk()
+        self.root = ctk.CTk()
+        ctk.set_appearance_mode("dark")
         self.root.title("Crear Boleta")
 
         w = 390
@@ -646,8 +681,8 @@ class Ventana_crear_boleta():
         self.entry_guardar_nombre.pack()
         self.entry_guardar_nombre.place(relx=0.55, rely=0.1)
 
-        btn_guardar = ctk.CTkButton(self.root, text="Guardar",hover_color="#0f5b61", fg_color="#24838a", bg_color="white", width=w/1.24, height=h/2.55, cursor="hand2", command=self.Abrir_Crear_Boleta)
-        btn_guardar.place(relx=0.1, rely=0.3)
+        btn_guardar = ctk.CTkButton(self.root, text="Guardar",hover_color="#0f5b61", fg_color="#24838a",  width=w/1.24, height=h/2.55, cursor="hand2", command=self.Abrir_Crear_Boleta)
+        btn_guardar.place(relx=0.1, rely=0.4)
 
         self.root.mainloop()
 
@@ -686,20 +721,100 @@ class Ventana_crear_boleta():
         basedatos.close()
         self.root.destroy()
 
-class Ventana_eliminar_venta():
+class Ventana_eliminar_cliente():
     def __init__(self):
         super().__init__()
-        self.root = tk.Tk()
-        self.root.title("Eliminar venta")
-
+        self.root = ctk.CTk()
+        ctk.set_appearance_mode("dark")
+		#---------------------Centrar-Ventana-----------------------------
         w = 390
         h = 150
         ws = self.root.winfo_screenwidth()
         hs = self.root.winfo_screenheight()
-        x = (ws / 2) - (w / 2)
-        y = (hs / 2) - (h / 2)
+        x = (ws/2) - (w/2)
+        y = (hs/2) - (h/2)
         self.root.geometry('%dx%d+%d+%d' % (w, h, x, y))
         self.root.resizable(False, False)
+		#-----------------------------------------------------------------
+        self.root.title("Eliminar Cliente")
+
+        def sacar_lista():
+            id_boleta = int(self.entry_numero_cliente.get())
+        
+            if self.entry_numero_cliente.get() == "":
+                self.entry_numero_cliente.focus()
+                messagebox.showerror("Error", "Coloca el número de compra")
+                print("No escribio el N° de venta.")
+                return
+        
+            basedatos = pymysql.connect(host="localhost", user="root", passwd="", db="sistemproa")
+            fcursor = basedatos.cursor()
+
+            try:
+                fcursor.execute("DELETE FROM clientes WHERE id_cliente = %s", (id_boleta,))
+                basedatos.commit()
+                messagebox.showinfo("Listo", "El cliente se ha borrado correctamente.")
+                self.root.destroy()
+                print("La venta se ha eliminado sin problemas.")
+            except Exception as e:
+                basedatos.rollback()
+                messagebox.showerror("Error", "Ocurrió un error al eliminar la venta.")
+                print("Error al eliminar la venta:", e)
+        
+            basedatos.close()
+
+#------------------------------------------------------------------------------------------------
+
+        self.entry_numero_cliente= ctk.CTkEntry(self.root, placeholder_text="N° de Cliente:" )
+        self.entry_numero_cliente.pack()
+        self.entry_numero_cliente.place(x=125, y=30)
+
+        self.btn_eliminar= ctk.CTkButton(self.root, text="Eliminar", width=150, height=60, command=sacar_lista)
+        self.btn_eliminar.place(x=120, y=75)
+
+        self.root.mainloop()
+
+class Ventana_eliminar_venta():
+    def __init__(self):
+        super().__init__()
+        self.root = ctk.CTk()
+        ctk.set_appearance_mode("dark")
+		#---------------------Centrar-Ventana-----------------------------
+        w = 390
+        h = 150
+        ws = self.root.winfo_screenwidth()
+        hs = self.root.winfo_screenheight()
+        x = (ws/2) - (w/2)
+        y = (hs/2) - (h/2)
+        self.root.geometry('%dx%d+%d+%d' % (w, h, x, y))
+        self.root.resizable(False, False)
+		#-----------------------------------------------------------------
+        self.root.title("Eliminar Venta")
+
+        def sacar_lista():
+            id_boleta = int(self.entry_numero_venta.get())
+        
+            if self.entry_numero_venta.get() == "":
+                self.entry_numero_venta.focus()
+                messagebox.showerror("Error", "Coloca el número de compra")
+                print("No escribio el N° de venta.")
+                return
+        
+            basedatos = pymysql.connect(host="localhost", user="root", passwd="", db="sistemproa")
+            fcursor = basedatos.cursor()
+
+            try:
+                fcursor.execute("DELETE FROM ventas WHERE id_ventas = %s", (id_boleta,))
+                basedatos.commit()
+                messagebox.showinfo("Listo", "La venta se ha borrado correctamente.")
+                self.root.destroy()
+                print("La venta se ha eliminado sin problemas.")
+            except Exception as e:
+                basedatos.rollback()
+                messagebox.showerror("Error", "Ocurrió un error al eliminar la venta.")
+                print("Error al eliminar la venta:", e)
+        
+            basedatos.close()
 
 #------------------------------------------------------------------------------------------------
 
@@ -707,12 +822,67 @@ class Ventana_eliminar_venta():
         self.entry_numero_venta.pack()
         self.entry_numero_venta.place(x=125, y=30)
 
-        self.btn_eliminar= ctk.CTkButton(self.root, text="Eliminar", width=150, height=60, command=self.sacar_lista)
+        self.btn_eliminar= ctk.CTkButton(self.root, text="Eliminar", width=150, height=60, command=sacar_lista)
         self.btn_eliminar.place(x=120, y=75)
 
-        #------------------------------------------------------------------------------------------------
+        self.root.mainloop()
+
+class Ventana_eliminar_proovedor():
+    def __init__(self):
+        super().__init__()
+        self.root = ctk.CTk()
+        ctk.set_appearance_mode("dark")
+		#---------------------Centrar-Ventana-----------------------------
+        w = 390
+        h = 150
+        ws = self.root.winfo_screenwidth()
+        hs = self.root.winfo_screenheight()
+        x = (ws/2) - (w/2)
+        y = (hs/2) - (h/2)
+        self.root.geometry('%dx%d+%d+%d' % (w, h, x, y))
+        self.root.resizable(False, False)
+		#-----------------------------------------------------------------
+        self.root.title("Eliminar Proovedor")
+
+        def sacar_lista():
+            id_boleta = int(self.entry_numero_proovedor.get())
+        
+            if self.entry_numero_proovedor.get() == "":
+                self.entry_numero_proovedor.focus()
+                messagebox.showerror("Error", "Coloca el número de compra")
+                print("No escribio el N° de proovedor.")
+                return
+        
+            basedatos = pymysql.connect(host="localhost", user="root", passwd="", db="sistemproa")
+            fcursor = basedatos.cursor()
+
+            try:
+                fcursor.execute("DELETE FROM proovedores WHERE id_proovedor = %s", (id_boleta,))
+                basedatos.commit()
+                messagebox.showinfo("Listo", "El proovedor se ha borrado correctamente.")
+                self.root.destroy()
+                print("La venta se ha eliminado sin problemas.")
+            except Exception as e:
+                basedatos.rollback()
+                messagebox.showerror("Error", "Ocurrió un error al eliminar la venta.")
+                print("Error al eliminar la venta:", e)
+        
+            basedatos.close()
+
+#------------------------------------------------------------------------------------------------
+
+        self.entry_numero_proovedor= ctk.CTkEntry(self.root, placeholder_text="N° de Proovedor:" )
+        self.entry_numero_proovedor.pack()
+        self.entry_numero_proovedor.place(x=125, y=30)
+
+        self.btn_eliminar= ctk.CTkButton(self.root, text="Eliminar", width=150, height=60, command=sacar_lista)
+        self.btn_eliminar.place(x=120, y=75)
 
         self.root.mainloop()
+
+#------------------------------------------------------------------------------------------------
+
+        
 
     
 
@@ -858,30 +1028,21 @@ class VentanaMenu():
             ventana_crear_boleta = Ventana_crear_boleta()
         def Abrir_Eliminar_Venta():
             ventana_eliminar_venta = Ventana_eliminar_venta()
-        
-        def sacar_lista():
-            id_boleta = int(self.entry_n_venta.get())
-        
-            if self.entry_n_venta.get() == "":
-                self.entry_n_venta.focus()
-                messagebox.showerror("Error", "Coloca el número de compra")
-                print("El usuario no colocó el N° de venta.")
-                return
-        
-            basedatos = pymysql.connect(host="localhost", user="root", passwd="", db="sistemproa")
+        def Abrir_Eliminar_Cliente():
+            ventana_eliminar_cliente = Ventana_eliminar_cliente()
+        def Abrir_Eliminar_Proovedor():
+            ventana_eliminar_proovedor = Ventana_eliminar_proovedor()
+
+        def actualizar_tabla_cliente():
+            basedatos = pymysql.connect(host= "localhost", user="root", passwd="", db="sistemproa")
             fcursor = basedatos.cursor()
 
-            try:
-                fcursor.execute("DELETE FROM ventas WHERE id_ventas = %s", (id_boleta,))
-                basedatos.commit()
-                messagebox.showinfo("Listo", "La venta se ha borrado correctamente.")
-                print("La venta se ha eliminado sin problemas.")
-            except Exception as e:
-                basedatos.rollback()
-                messagebox.showerror("Error", "Ocurrió un error al eliminar la venta.")
-                print("Error al eliminar la venta:", e)
-        
-            basedatos.close()
+            fcursor.execute("SELECT id_cliente, NombreyApellido, Numero_tel, Direccion FROM clientes")
+            rows = fcursor.fetchall()
+            for child in self.tablaclientes.get_children():
+                self.tablaclientes.delete(child)
+            for row in rows:
+                self.tablaclientes.insert("","end",values=row)
 
         def actualizar_tabla_ventas():
             basedatos = pymysql.connect(host= "localhost", user="root", passwd="", db="sistemproa")
@@ -893,16 +1054,75 @@ class VentanaMenu():
                 self.tablaventas.delete(child)
             for row in rows:
                 self.tablaventas.insert("","end",values=row)
-        
-        def buscar_venta ():
-            if self.entry_buscar.get () == "":
-                self.entry_buscar.focus()
-                messagebox.showerror("Error", "Usted no ha escrito nada.")
-                return
-                
 
+        def actualizar_tabla_proovedor():
             basedatos = pymysql.connect(host= "localhost", user="root", passwd="", db="sistemproa")
             fcursor = basedatos.cursor()
+
+            fcursor.execute("SELECT id_proovedor, nombre, apellido, empresa, num_telefono, tipo_producto, marca FROM proovedores")
+            rows = fcursor.fetchall()
+            for child in self.tablaproovedores.get_children():
+                self.tablaproovedores.delete(child)
+            for row in rows:
+                self.tablaproovedores.insert("","end",values=row)
+        
+        def buscar_cliente ():
+            texto_busqueda = self.entry_buscar_cliente.get()
+    
+            for row in self.tablaclientes.get_children():
+                self.tablaclientes.delete(row)
+    
+            basedatos = pymysql.connect(host="localhost", user="root", passwd="", db="sistemproa")
+            fcursor = basedatos.cursor()
+    
+            query = "SELECT id_cliente, NombreyApellido, Numero_tel, Direccion FROM clientes WHERE NombreyApellido LIKE %s"
+            fcursor.execute(query, ("%" + texto_busqueda + "%",))
+            rows = fcursor.fetchall()
+    
+            for row in rows:
+                self.tablaclientes.insert("", "end", values=row)
+    
+            basedatos.close()
+
+
+                
+        def buscar_venta ():
+            texto_busqueda = self.entry_buscar_venta.get()
+    
+            for row in self.tablaventas.get_children():
+                self.tablaventas.delete(row)
+    
+            
+            basedatos = pymysql.connect(host="localhost", user="root", passwd="", db="sistemproa")
+            fcursor = basedatos.cursor()
+    
+            query = "SELECT id_ventas, nombreyapellido, prendas_compradas, metedo_pago, entrega, cuotas, total, total_final FROM ventas WHERE nombreyapellido LIKE %s"
+            fcursor.execute(query, ("%" + texto_busqueda + "%",))
+            rows = fcursor.fetchall()
+    
+            for row in rows:
+                self.tablaventas.insert("", "end", values=row)
+    
+            basedatos.close()
+        
+        def buscar_proovedor ():
+            texto_busqueda = self.entry_buscar_proovedor.get()
+    
+            for row in self.tablaproovedores.get_children():
+                self.tablaproovedores.delete(row)
+    
+            
+            basedatos = pymysql.connect(host="localhost", user="root", passwd="", db="sistemproa")
+            fcursor = basedatos.cursor()
+    
+            query = "SELECT id_proovedor, nombre, apellido, empresa, num_telefono, tipo_producto, marca FROM proovedores WHERE nombre LIKE %s"
+            fcursor.execute(query, ("%" + texto_busqueda + "%",))
+            rows = fcursor.fetchall()
+    
+            for row in rows:
+                self.tablaproovedores.insert("", "end", values=row)
+    
+            basedatos.close()
 
 
         
@@ -916,7 +1136,7 @@ class VentanaMenu():
         # CARGAR IMÁGENES
         image_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "img")
 
-        self.img_login = ctk.CTkImage(Image.open(os.path.join(image_path, "logo_sgtr.png")), size=(100, 75))
+        self.img_login = ctk.CTkImage(Image.open(os.path.join(image_path, "logo_sgtr.png")), size=(125, 85))
         self.home_image = ctk.CTkImage(Image.open(os.path.join(image_path, "home_light.png")), size=(30, 30))
         self.client_image = ctk.CTkImage(Image.open(os.path.join(image_path, "logo_clientes.png")), size=(30, 30))
         self.stock_image = ctk.CTkImage(Image.open(os.path.join(image_path, "logo_stock.png")), size=(30, 30))
@@ -1000,12 +1220,31 @@ class VentanaMenu():
 
         # FRAME CLIENTES
         self.segundo_frame = ctk.CTkFrame(self.root, corner_radius=0, fg_color="transparent")
-        self.segundo_frame.grid_columnconfigure(0, weight=1)
+        self.segundo_frame.grid_columnconfigure(0, weight=1)       
 
-        self.home_frame_button_3 = ctk.CTkButton(self.segundo_frame, text="Agregar Cliente", command=Abrir_Agregar_Clientes)
-        self.home_frame_button_3.grid(row=0, column=0,  padx=10, pady=10)
-        self.home_frame_button_4 = ctk.CTkButton(self.segundo_frame, text="Holaaaa")
-        self.home_frame_button_4.grid(row=0, column=1,  padx=10, pady=10)
+        self.btn_agregar_cliente = ctk.CTkButton(self.segundo_frame, text="Agregar Cliente", command=Abrir_Agregar_Clientes)
+        self.btn_agregar_cliente.grid(row=0, column=0, padx=10, pady=5, sticky="nsew") 
+
+        self.btn_eliminar_cliente = ctk.CTkButton(self.segundo_frame, text="Eliminar Cliente", command=Abrir_Eliminar_Cliente)
+        self.btn_eliminar_cliente.grid(row=0, column=1, padx=10, pady=5, sticky="nsew")
+
+        self.btn_actualizar_tabla_cli = ctk.CTkButton(self.segundo_frame, text="Actualizar Tabla", command=actualizar_tabla_cliente)
+        self.btn_actualizar_tabla_cli.grid(row=0, column=2, padx=10, pady=5, sticky="nsew")
+
+        #--------------------------------------------Buscar-----------------------------------------------------------------
+
+        self.frame_buscar = ctk.CTkFrame(self.segundo_frame)
+        self.frame_buscar.grid(row=0, column=3, padx=5, pady=10, sticky="nsew")
+
+        self.entry_buscar_cliente = ctk.CTkEntry(self.frame_buscar, placeholder_text="Buscar", width=400)
+        self.entry_buscar_cliente.grid(row=0, column=0, padx=5, pady=(10, 0), sticky="nsew")
+
+        self.search_icon = ctk.CTkImage(Image.open(os.path.join(carpeta_imagen, "search.png")), size=(20, 20))
+
+        self.btn_buscar = ctk.CTkButton(self.frame_buscar, text="", width=20,cursor="hand2", image=self.search_icon, command=buscar_cliente)
+        self.btn_buscar.grid(row=0, column=1, padx=5, pady=10, sticky="nsew")
+
+ #--------------------------------------------Tabla-----------------------------------------------------------------
 
         self.tablaclientes = ttk.Treeview(self.segundo_frame)
         self.tablaclientes["columns"] = ("N° de cliente", "Nombre y Apellido", "Número de teléfono", "Dirección") 
@@ -1025,7 +1264,7 @@ class VentanaMenu():
         self.tablaclientes.heading("#4", text="Dirección")
         self.tablaclientes.column("#4", width=120, minwidth=120, stretch="no")
 
-        self.tablaclientes.grid(row=1, column=0, columnspan=2, padx=10, pady=10)
+        self.tablaclientes.grid(row=1, column=0, columnspan=4, padx=10, pady=10, sticky="ns")
 
         basedatos = pymysql.connect(host= "localhost", user="root", passwd="", db="sistemproa")
         fcursor = basedatos.cursor()
@@ -1039,6 +1278,19 @@ class VentanaMenu():
 
 
         # FRAME STOCK
+
+        def cargar_articulos(frame, genero):
+            basedatos = pymysql.connect(host="localhost", user="root", passwd="", db="sistemproa")
+            fcursor = basedatos.cursor()
+    
+            query = "SELECT marca, talle, estado, precio, tipo_usuario, tipo_prenda FROM articulos WHERE tipo_usuario = %s"
+            fcursor.execute(query, (genero,))
+            rows = fcursor.fetchall()
+    
+            for row in rows:
+                frame.insert("", "end", values=row)
+    
+        basedatos.close()
         self.tercer_frame = ctk.CTkFrame(self.root, corner_radius=0, fg_color="transparent")
         self.tercer_frame.grid_columnconfigure(0, weight=1)
 
@@ -1060,8 +1312,10 @@ class VentanaMenu():
         self.lblhombre.grid(row=0, column=0, padx=20, pady=20)
 
         self.tablahombre = ttk.Treeview(self.tabview.tab("Hombre"))
-        self.tablahombre["columns"] = ("Marca", "Talle", "Estado", "Precio", "Tipo de Usuario", "Tipo de Prenda") 
-        
+        self.tablahombre["columns"] = ("Marca", "Talle", "Estado", "Precio", "Tipo de Usuario", "Tipo de Prenda")
+        self.tablahombre.grid(row=0, column=0)
+        cargar_articulos(self.tablahombre, "Hombre")
+
         self.tablahombre.heading("#0", text="")
         self.tablahombre.column("#0", width=0, stretch=tk.NO)
     
@@ -1084,20 +1338,14 @@ class VentanaMenu():
         self.tablahombre.column("#6", width=120, minwidth=120, stretch="no")
         self.tablahombre.grid(row=0, column=0)
 
-        basedatos = pmydb = pymysql.connect(host= "localhost", user="root", passwd="", db="sistemproa")
-        fcursor = basedatos.cursor()
-
-        fcursor.execute("SELECT marca, talle, estado, precio, tipo_usuario, tipo_prenda FROM articulos")
-        rows = fcursor.fetchall()
-
-        for row in rows:
-            self.tablahombre.insert("","end",values=row)
 
         self.lblmujer = ctk.CTkLabel(self.tabview.tab("Mujer"), text="Ropa de Mujer")
         self.lblmujer.grid(row=0, column=0, padx=20, pady=20)
-
+        
         self.tablamujer = ttk.Treeview(self.tabview.tab("Mujer"))
-        self.tablamujer["columns"] = ("Marca", "Talle", "Estado", "Precio", "Tipo de Usuario", "Tipo de Prenda") 
+        self.tablamujer["columns"] = ("Marca", "Talle", "Estado", "Precio", "Tipo de Usuario", "Tipo de Prenda")
+        self.tablamujer.grid(row=0, column=0)
+        cargar_articulos(self.tablamujer, "Mujer")
         
         self.tablamujer.heading("#0", text="")
         self.tablamujer.column("#0", width=0, stretch=tk.NO)
@@ -1122,14 +1370,8 @@ class VentanaMenu():
 
         self.tablamujer.grid(row=0, column=0)
 
-        basedatos = pmydb = pymysql.connect(host= "localhost", user="root", passwd="", db="sistemproa")
-        fcursor = basedatos.cursor()
+        
 
-        fcursor.execute("SELECT marca, talle, estado, precio, tipo_usuario, tipo_prenda FROM articulos")
-        rows = fcursor.fetchall()
-
-        for row in rows:
-            self.tablamujer.insert("","end",values=row)
 
 
         #FRAME VENTAS
@@ -1137,24 +1379,24 @@ class VentanaMenu():
         self.cuarto_frame.grid_columnconfigure(0, weight=1)
 
         self.agregar_venta_button_1 = ctk.CTkButton(self.cuarto_frame, text="Registrar Venta", command= Abrir_registrar_ventas)
-        self.agregar_venta_button_1.grid(row=0, column=0, padx=10, pady=10)
+        self.agregar_venta_button_1.grid(row=0, column=0, padx=10, pady=5, sticky="nsew")
 
         self.guardar_boleta = ctk.CTkButton(self.cuarto_frame, text="Crear boleta", command= Abrir_Crear_Boleta)
-        self.guardar_boleta.grid(row=0, column=1, padx=10, pady=10)
+        self.guardar_boleta.grid(row=0, column=1, padx=10, pady=5, sticky="nsew")
 
         self.actualizar_tabla= ctk.CTkButton(self.cuarto_frame, text="Actualizar Tabla", command=actualizar_tabla_ventas)
-        self.actualizar_tabla.grid(row=0, column=2, padx=10, pady=10)
+        self.actualizar_tabla.grid(row=0, column=2, padx=10, pady=5, sticky="nsew")
 
-        self.eliminar_venta= ctk.CTkButton(self.cuarto_frame, text="Eliminar Venta",command=sacar_lista)
-        self.eliminar_venta.grid(row=0, column=3, padx=10, pady=10)
+        self.eliminar_venta= ctk.CTkButton(self.cuarto_frame, text="Eliminar Venta",command=Abrir_Eliminar_Venta)
+        self.eliminar_venta.grid(row=0, column=3, padx=10, pady=5, sticky="nsew")
 
 #--------------------------------------------Buscar-----------------------------------------------------------------
 
         self.frame_buscar = ctk.CTkFrame(self.cuarto_frame)
         self.frame_buscar.grid(row=0, column=4, padx=5, pady=10)
 
-        self.entry_buscar = ctk.CTkEntry(self.frame_buscar, placeholder_text="Buscar", width=400)
-        self.entry_buscar.grid(row=0, column=0, padx=5, pady=(10, 0))
+        self.entry_buscar_venta = ctk.CTkEntry(self.frame_buscar, placeholder_text="Buscar", width=400)
+        self.entry_buscar_venta.grid(row=0, column=0, padx=5, pady=(10, 0))
 
         self.search_icon = ctk.CTkImage(Image.open(os.path.join(carpeta_imagen, "search.png")), size=(20, 20))
 
@@ -1199,38 +1441,67 @@ class VentanaMenu():
 
         #FRAME proovedor
         self.quinto_frame = ctk.CTkFrame(self.root, corner_radius=0, fg_color="transparent")
-        self.quinto_frame.grid_columnconfigure(0, weight=1)
+        self.quinto_frame.grid(row=1, column=0, padx=20, pady=10)
 
-        self.agregar_proveedor_button_1 = ctk.CTkButton(self.quinto_frame, text="Registrar Proovedor", command= Abrir_Registrar_Proveedor)
-        self.agregar_proveedor_button_1.grid(row=1, column=0, padx=20, pady=10)
+        self.btn_agregar_proveedor = ctk.CTkButton(self.quinto_frame, text="Registrar Proovedor", command= Abrir_Registrar_Proveedor)
+        self.btn_agregar_proveedor.grid(row=0, column=0, padx=10, pady=5, sticky="nsew")
 
-        self.agregar_proveedor_button_1 = ctk.CTkButton(self.quinto_frame, text="Eliminar Proovedor")
-        self.agregar_proveedor_button_1.grid(row=1, column=1, padx=20, pady=10)
+        self.btn_eliminar_proveedor = ctk.CTkButton(self.quinto_frame, text="Eliminar Proovedor", command=Abrir_Eliminar_Proovedor)
+        self.btn_eliminar_proveedor.grid(row=0, column=1, padx=10, pady=5, sticky="nsew")
 
+        self.btn_actualizar_tabla_proo = ctk.CTkButton(self.quinto_frame, text="Actualizar Tabla", command=actualizar_tabla_proovedor)
+        self.btn_actualizar_tabla_proo.grid(row=0, column=2, padx=10, pady=5, sticky="nsew")
+
+        #--------------------------------------------Buscar-----------------------------------------------------------------
+
+        self.frame_buscar = ctk.CTkFrame(self.quinto_frame)
+        self.frame_buscar.grid(row=0, column=3, padx=5, pady=10, sticky="nsew")
+
+        self.entry_buscar_proovedor = ctk.CTkEntry(self.frame_buscar, placeholder_text="Buscar", width=400)
+        self.entry_buscar_proovedor.grid(row=0, column=0, padx=5, pady=(10, 0), sticky="nsew")
+
+        self.search_icon = ctk.CTkImage(Image.open(os.path.join(carpeta_imagen, "search.png")), size=(20, 20))
+
+        self.btn_buscar = ctk.CTkButton(self.frame_buscar, text="", width=20,cursor="hand2", image=self.search_icon, command=buscar_proovedor)
+        self.btn_buscar.grid(row=0, column=1, padx=5, pady=10, sticky="nsew")
+        
         self.tablaproovedores = ttk.Treeview(self.quinto_frame)
-        self.tablaproovedores["columns"] = ( "Nombre", "Apellido", "Empresa", "N° de teléfono", "Tipo de producto", "Marca") 
+        self.tablaproovedores["columns"] = ( "N° Proovedor", "Nombre", "Apellido", "Empresa", "N° de teléfono", "Tipo de producto", "Marca") 
         self.tablaproovedores.heading("#0", text="")
         self.tablaproovedores.column("#0", width=0, stretch=tk.NO)
 
-        self.tablaproovedores.heading("#1", text="Nombre")
+        self.tablaproovedores.heading("#1", text="N° Proovedor")
         self.tablaproovedores.column("#1", width=100, minwidth=100, stretch="no")
 
-        self.tablaproovedores.heading("#2", text="Apellido")
-        self.tablaproovedores.column("#2", width=120, minwidth=120, stretch="no")
+        self.tablaproovedores.heading("#2", text="Nombre")
+        self.tablaproovedores.column("#2", width=100, minwidth=120, stretch="no")
 
-        self.tablaproovedores.heading("#3", text="Empresa")
+        self.tablaproovedores.heading("#3", text="Apellido")
         self.tablaproovedores.column("#3", width=120, minwidth=120, stretch="no")
 
-        self.tablaproovedores.heading("#4", text="N° de teléfono")
+        self.tablaproovedores.heading("#4", text="Empresa")
         self.tablaproovedores.column("#4", width=120, minwidth=120, stretch="no")
 
-        self.tablaproovedores.heading("#5", text="Tipo de producto")
+        self.tablaproovedores.heading("#5", text="N° de teléfono")
         self.tablaproovedores.column("#5", width=120, minwidth=120, stretch="no")
 
-        self.tablaproovedores.heading("#6", text="Marca")
-        self.tablaproovedores.column("#6", width=120)
+        self.tablaproovedores.heading("#6", text="Tipo de producto")
+        self.tablaproovedores.column("#6", width=120, minwidth=120, stretch="no")
 
-        self.tablaproovedores.grid(row=2, column=2, columnspan=5, padx=10, pady=10, sticky="nsew")
+        self.tablaproovedores.heading("#7", text="Marca")
+        self.tablaproovedores.column("#7", width=120)
+
+        self.tablaproovedores.grid(row=1, column=0, columnspan=4, padx=10, pady=10, sticky="ns")
+
+        basedatos = pmydb = pymysql.connect(host= "localhost", user="root", passwd="", db="sistemproa")
+        fcursor = basedatos.cursor()
+
+        fcursor.execute("SELECT id_proovedor, nombre, apellido, empresa, num_telefono, tipo_producto, marca FROM proovedores")
+        rows = fcursor.fetchall()
+
+        for row in rows:
+            self.tablaproovedores.insert("","end",values=row)
+
 
 
             
