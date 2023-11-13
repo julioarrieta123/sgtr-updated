@@ -275,7 +275,7 @@ class Ventana_agregar_articulos():
             entry_marca.delete(0, "end")
             entry_precio.delete(0, "end")
             entry_talle.delete(0, "end")
-            entry_tipo_usuario.delete(0, "end")
+            cmbx_tipo_usuario.delete(0, "end")
             entry_tipo_prenda.delete(0, "end")
 
         def Guardar_Articulo():
@@ -291,8 +291,8 @@ class Ventana_agregar_articulos():
                 entry_precio.focus()
                 messagebox.showinfo("Faltan Datos.", "Ingrese el precio.")
                 return
-            elif entry_tipo_usuario.get()=="":
-                entry_tipo_usuario.focus()
+            elif cmbx_tipo_usuario.get()=="Tipo de usuario":
+                cmbx_tipo_usuario.focus()
                 messagebox.showinfo("Faltan Datos.", "Ingrese el tipo de usuario.")
                 return
             elif entry_tipo_prenda.get()=="":
@@ -308,28 +308,13 @@ class Ventana_agregar_articulos():
             basedatos = mydb = pymysql.connect(host= "localhost", user="root", passwd="", db="sistemproa")
             fcursor = basedatos.cursor()
             
-            sql="INSERT INTO articulos (marca, talle, estado, precio, tipo_usuario, tipo_prenda) VALUES ('{0}','{1}','{2}','{3}','{4}','{5}')".format(entry_marca.get(), entry_talle.get(), cmbx_estado.get(), entry_precio.get(), entry_tipo_usuario.get(), entry_tipo_prenda.get())
+            sql="INSERT INTO articulos (marca, talle, estado, precio, tipo_usuario, tipo_prenda) VALUES ('{0}','{1}','{2}','{3}','{4}','{5}')".format(entry_marca.get(), entry_talle.get(), cmbx_estado.get(), entry_precio.get(), cmbx_tipo_usuario.get(), entry_tipo_prenda.get())
             fcursor.execute(sql)
             basedatos.commit()
             messagebox.showinfo("Registro", "Se registró el articulo con éxito")
 
             self.root.destroy()
             basedatos.close()
-        
-
-        #----------------------------------------- FONDO -------------------------------------------------------------------------
-        #carpeta_imagen = os.path.join(carpeta_principal, "img")
-
-        #img = Image.open(os.path.join(carpeta_imagen, "agregar-diseno.png"))
-        #img = ctk.CTkImage(dark_image=img, size=(int(w), int(h/4)))
-        #img_fondo = img
-        #img_fondo_lbl = ctk.CTkLabel(self.root, image=img_fondo, text="",  bg_color="#242423")
-        #img_fondo_lbl.pack()
-
-        #------------------------------------------------------------------------------------------------------------------------
-
-  
-
 		
 		#----------------Labels, entry y botones-------------------------
 		
@@ -989,6 +974,87 @@ class Ventana_registrar_proveedor():
 
         self.root.mainloop()
 
+class Ventana_editar_articulo():
+    def __init__(self):
+        super().__init__()
+
+        self.root = ctk.CTk()
+        ctk.set_appearance_mode("dark")
+		#---------------------Centrar-Ventana-----------------------------
+        w = 390
+        h = 390
+        ws = self.root.winfo_screenwidth()
+        hs = self.root.winfo_screenheight()
+        x = (ws/2) - (w/2)
+        y = (hs/2) - (h/2)
+        self.root.geometry('%dx%d+%d+%d' % (w, h, x, y))
+        self.root.resizable(False, False)
+		#-----------------------------------------------------------------
+        self.root.title("Editar Articulo")
+		#---------------------------------------------------------------
+        def Salir_boton():
+            self.root.destroy()
+
+        def Cancelar_Boton ():
+            entry_marca.delete(0, "end")
+            entry_precio.delete(0, "end")
+            entry_talle.delete(0, "end")
+            cmbx_tipo_usuario.set("Tipo de Usuario")
+            entry_tipo_prenda.delete(0, "end")
+
+        #----------------Labels, entry y botones-------------------------
+
+        entry_n_articulo= ctk.CTkEntry (self.root, placeholder_text="N° de artículo", bg_color="transparent")
+        entry_n_articulo.pack()
+        entry_n_articulo.place(relx=0.1,rely=0.1)
+
+        btn_mostrar_datos= ctk.CTkButton (self.root, text="Obtener datos", fg_color="#62aea4", hover_color="#335b55", cursor="hand2")
+        btn_mostrar_datos.pack()
+        btn_mostrar_datos.place(relx=0.55,rely=0.1)
+		
+        entry_marca= ctk.CTkEntry(self.root, placeholder_text="Marca", bg_color="transparent" )
+        entry_marca.pack()
+        entry_marca.place(relx=0.1,rely=0.25)
+		
+        entry_talle= ctk.CTkEntry(self.root, placeholder_text="Talle:" )
+        entry_talle.pack()
+        entry_talle.place(relx=0.1,rely=0.35)
+		
+        entry_precio= ctk.CTkEntry(self.root, placeholder_text="Precio:")
+        entry_precio.pack()
+        entry_precio.place(relx=0.1,rely=0.45)
+
+        opciones_usu= ["Hombre", "Mujer", "Niños"]
+        cmbx_tipo_usuario= ctk.CTkComboBox(self.root, values=opciones_usu, state="readonly")
+        cmbx_tipo_usuario.set("Tipo de usuario")
+        cmbx_tipo_usuario.place(relx=0.55,rely=0.25)
+		
+        entry_tipo_prenda= ctk.CTkEntry(self.root, placeholder_text="Tipo de prenda:" )
+        entry_tipo_prenda.pack()
+        entry_tipo_prenda.place(relx=0.55,rely=0.35)
+		
+        opciones= ["Nuevo", "Usado"]
+        cmbx_estado= ctk.CTkComboBox(self.root, values=opciones, state="readonly", width=140)
+        cmbx_estado.set("Estado:")
+        cmbx_estado.place(relx=0.55,rely=0.45)
+
+        image_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "img")
+
+        self.img_save = ctk.CTkImage(Image.open(os.path.join(image_path, "logo_guardar.png")), size=(30, 30))
+        self.img_cancel = ctk.CTkImage(Image.open(os.path.join(image_path, "logo_cancel.png")), size=(30, 30))
+        self.img_salir = ctk.CTkImage(Image.open(os.path.join(image_path, "logo_salir.png")), size=(30, 30))
+
+        btn_guardar= ctk.CTkButton(self.root, text="Guardar", fg_color="#24838a", hover_color="#0d565c", width=w/1.25,height=h/10, cursor="hand2" )#, image=self.img_save, compound="left")
+        btn_guardar.place(relx=0.1,rely=0.58)
+
+        btn_cancelar= ctk.CTkButton(self.root, text="Cancelar",fg_color="#ec1c24",hover_color="#b0060c", width=w/1.25,height=h/10, cursor="hand2")#, image=self.img_cancel, compound="left")
+        btn_cancelar.place(relx=0.1,rely=0.71)
+
+        btn_salir= ctk.CTkButton(self.root, text="Salir", fg_color="#62aea4", hover_color="#2c7b71",width=w/1.25,height=h/10, cursor="hand2")#,image=self.img_salir, compound="left")
+        btn_salir.place(relx=0.1,rely=0.84)
+
+        self.root.mainloop()
+
 
 
 class VentanaMenu():
@@ -1032,6 +1098,8 @@ class VentanaMenu():
             ventana_eliminar_cliente = Ventana_eliminar_cliente()
         def Abrir_Eliminar_Proovedor():
             ventana_eliminar_proovedor = Ventana_eliminar_proovedor()
+        def Abrir_Editar_Articulo():
+            ventana_editar_articulo = Ventana_editar_articulo()
 
         def actualizar_tabla_cliente():
             basedatos = pymysql.connect(host= "localhost", user="root", passwd="", db="sistemproa")
@@ -1065,7 +1133,32 @@ class VentanaMenu():
                 self.tablaproovedores.delete(child)
             for row in rows:
                 self.tablaproovedores.insert("","end",values=row)
-        
+
+        def actualizar_tabla_stock():
+            basedatos = pymysql.connect(host= "localhost", user="root", passwd="", db="sistemproa")
+            fcursor = basedatos.cursor()
+
+            fcursor.execute("SELECT id_articulos, marca, talle, estado, precio, tipo_usuario, tipo_prenda FROM articulos")
+            rows = fcursor.fetchall()
+            for child in self.tablahombre.get_children():
+                self.tablahombre.delete(child)
+            basedatos.commit()
+            for row in rows:
+                self.tablahombre.insert("","end",values=row)
+
+            for child in self.tablamujer.get_children():
+                self.tablamujer.delete(child)
+
+            fcursor.execute("SELECT id_articulos, marca, talle, estado, precio, tipo_usuario, tipo_prenda FROM articulos WHERE tipo_usuario = 'mujer'")
+            rows_mujer = fcursor.fetchall()
+            for row in rows_mujer:
+                self.tablamujer.insert("", "end", values=row)
+
+            basedatos.close()
+
+
+            
+
         def buscar_cliente ():
             texto_busqueda = self.entry_buscar_cliente.get()
     
@@ -1283,7 +1376,7 @@ class VentanaMenu():
             basedatos = pymysql.connect(host="localhost", user="root", passwd="", db="sistemproa")
             fcursor = basedatos.cursor()
     
-            query = "SELECT marca, talle, estado, precio, tipo_usuario, tipo_prenda FROM articulos WHERE tipo_usuario = %s"
+            query = "SELECT id_articulos, marca, talle, estado, precio, tipo_usuario, tipo_prenda FROM articulos WHERE tipo_usuario = %s"
             fcursor.execute(query, (genero,))
             rows = fcursor.fetchall()
     
@@ -1295,16 +1388,42 @@ class VentanaMenu():
         self.tercer_frame.grid_columnconfigure(0, weight=1)
 
         self.agregar_articulo_button_1 = ctk.CTkButton(self.tercer_frame, text="Agregar Artículo", command= Abrir_Agregar_Articulos)
-        self.agregar_articulo_button_1.grid(row=0, column=0, padx=20, pady=10)
+        self.agregar_articulo_button_1.grid(row=0, column=0, padx=20, pady=10, sticky="nsew")
+        self.agregar_articulo_button_1.configure(width=155)
+
+        self.editar_stock = ctk.CTkButton(self.tercer_frame, text="Editar stock", command=Abrir_Editar_Articulo)
+        self.editar_stock.grid(row=0, column=1, padx=10, pady=5, sticky="nsew")
+
+        self.actualizar_tabla= ctk.CTkButton(self.tercer_frame, text="Actualizar tabla", command=actualizar_tabla_stock)
+        self.actualizar_tabla.grid(row=0, column=2, padx=10, pady=5, sticky="nsew")
+
+        self.eliminar_stock= ctk.CTkButton(self.tercer_frame, text="Eliminar stock")
+        self.eliminar_stock.grid(row=0, column=3, padx=10, pady=5, sticky="nsew")
+
+        #--------------------------------------------Buscar-----------------------------------------------------------------
+
+        self.frame_buscar = ctk.CTkFrame(self.tercer_frame)
+        self.frame_buscar.grid(row=0, column=4, padx=5, pady=10, sticky="nsew")
+
+        self.entry_buscar_cliente = ctk.CTkEntry(self.frame_buscar, placeholder_text="Buscar", width=400)
+        self.entry_buscar_cliente.grid(row=0, column=0, padx=5, pady=(10, 0), sticky="nsew")
+
+        self.search_icon = ctk.CTkImage(Image.open(os.path.join(carpeta_imagen, "search.png")), size=(20, 20))
+
+        self.btn_buscar = ctk.CTkButton(self.frame_buscar, text="", width=20,cursor="hand2", image=self.search_icon, command=buscar_cliente)
+        self.btn_buscar.grid(row=0, column=1, padx=5, pady=10, sticky="nsew")
+
+#--------------------------------------------TABLA-----------------------------------------------------------------
+
 
         self.tabview = ctk.CTkTabview(self.tercer_frame, width=250)
-        self.tabview.grid(row=1, column=0, padx=(30, 0), pady=(30, 0), sticky="nsew")
+        self.tabview.grid(row=1, column=0, padx=(30, 0), pady=(30, 0), columnspan=5, sticky="nsew")
         self.tabview.add("Hombre")
         self.tabview.add("Mujer")
         self.tabview.add("Niños")
-        self.tabview.tab("Hombre").grid_columnconfigure(0, weight=3)  
-        self.tabview.tab("Mujer").grid_columnconfigure(0, weight=3)
-        self.tabview.tab("Niños").grid_columnconfigure(0, weight=3)
+        self.tabview.tab("Hombre").grid_columnconfigure(0, weight=1)  
+        self.tabview.tab("Mujer").grid_columnconfigure(0, weight=1)
+        self.tabview.tab("Niños").grid_columnconfigure(0, weight=1)
 
 
         
@@ -1312,66 +1431,69 @@ class VentanaMenu():
         self.lblhombre.grid(row=0, column=0, padx=20, pady=20)
 
         self.tablahombre = ttk.Treeview(self.tabview.tab("Hombre"))
-        self.tablahombre["columns"] = ("Marca", "Talle", "Estado", "Precio", "Tipo de Usuario", "Tipo de Prenda")
+        self.tablahombre["columns"] = ("N° Artículo", "Marca", "Talle", "Estado", "Precio", "Tipo de Usuario", "Tipo de Prenda")
         self.tablahombre.grid(row=0, column=0)
         cargar_articulos(self.tablahombre, "Hombre")
 
         self.tablahombre.heading("#0", text="")
         self.tablahombre.column("#0", width=0, stretch=tk.NO)
-    
-        self.tablahombre.heading("#1", text="Marca")
-        self.tablahombre.column("#1", width=120, minwidth=120, stretch="no")
 
-        self.tablahombre.heading("#2", text="Talle")
+        self.tablahombre.heading("#1", text="N° Artículo")
+        self.tablahombre.column("#1", width=120, minwidth=120, stretch="no")
+    
+        self.tablahombre.heading("#2", text="Marca")
         self.tablahombre.column("#2", width=120, minwidth=120, stretch="no")
 
-        self.tablahombre.heading("#3", text="Estado")
+        self.tablahombre.heading("#3", text="Talle")
         self.tablahombre.column("#3", width=120, minwidth=120, stretch="no")
 
-        self.tablahombre.heading("#4", text="Precio")
+        self.tablahombre.heading("#4", text="Estado")
         self.tablahombre.column("#4", width=120, minwidth=120, stretch="no")
 
-        self.tablahombre.heading("#5", text="Tipo de Usuario")
+        self.tablahombre.heading("#5", text="Precio")
         self.tablahombre.column("#5", width=120, minwidth=120, stretch="no")
 
-        self.tablahombre.heading("#6", text="Tipo de Prenda")
+        self.tablahombre.heading("#6", text="Tipo de Usuario")
         self.tablahombre.column("#6", width=120, minwidth=120, stretch="no")
-        self.tablahombre.grid(row=0, column=0)
+
+        self.tablahombre.heading("#7", text="Tipo de Prenda")
+        self.tablahombre.column("#7", width=120, minwidth=120, stretch="no")
+        self.tablahombre.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
 
 
         self.lblmujer = ctk.CTkLabel(self.tabview.tab("Mujer"), text="Ropa de Mujer")
         self.lblmujer.grid(row=0, column=0, padx=20, pady=20)
         
         self.tablamujer = ttk.Treeview(self.tabview.tab("Mujer"))
-        self.tablamujer["columns"] = ("Marca", "Talle", "Estado", "Precio", "Tipo de Usuario", "Tipo de Prenda")
+        self.tablamujer["columns"] = ("N° Artículo", "Marca", "Talle", "Estado", "Precio", "Tipo de Usuario", "Tipo de Prenda")
         self.tablamujer.grid(row=0, column=0)
         cargar_articulos(self.tablamujer, "Mujer")
         
         self.tablamujer.heading("#0", text="")
         self.tablamujer.column("#0", width=0, stretch=tk.NO)
-        
-        self.tablamujer.heading("#1", text="Marca")
-        self.tablamujer.column("#1", width=120, minwidth=120, stretch="no")
 
-        self.tablamujer.heading("#2", text="Talle")
+        self.tablamujer.heading("#1", text="N° Artículo")
+        self.tablamujer.column("#1", width=120, minwidth=120, stretch="no")
+        
+        self.tablamujer.heading("#2", text="Marca")
         self.tablamujer.column("#2", width=120, minwidth=120, stretch="no")
 
-        self.tablamujer.heading("#3", text="Estado")
+        self.tablamujer.heading("#3", text="Talle")
         self.tablamujer.column("#3", width=120, minwidth=120, stretch="no")
 
-        self.tablamujer.heading("#4", text="Precio")
+        self.tablamujer.heading("#4", text="Estado")
         self.tablamujer.column("#4", width=120, minwidth=120, stretch="no")
 
-        self.tablamujer.heading("#5", text="Tipo de Usuario")
+        self.tablamujer.heading("#5", text="Precio")
         self.tablamujer.column("#5", width=120, minwidth=120, stretch="no")
 
-        self.tablamujer.heading("#6", text="Tipo de Prenda")
+        self.tablamujer.heading("#6", text="Tipo de Usuario")
         self.tablamujer.column("#6", width=120, minwidth=120, stretch="no")
 
-        self.tablamujer.grid(row=0, column=0)
+        self.tablamujer.heading("#7", text="Tipo de Prenda")
+        self.tablamujer.column("#7", width=120, minwidth=120, stretch="no")
 
-        
-
+        self.tablamujer.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
 
 
         #FRAME VENTAS
